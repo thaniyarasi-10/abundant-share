@@ -1,12 +1,223 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { supabase } from '@/integrations/supabase/client';
+import { PlatformStats } from '@/types';
+import { Heart, Users, Utensils, Building2, ArrowRight, CheckCircle, Clock, MapPin } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 
 const Index = () => {
+  const [stats, setStats] = useState<PlatformStats | null>(null);
+  const { user } = useAuth();
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      const { data } = await supabase
+        .from('platform_stats')
+        .select('*')
+        .single();
+      
+      if (data) setStats(data);
+    };
+
+    fetchStats();
+  }, []);
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
+    <div className="min-h-screen">
+      {/* Hero Section */}
+      <section className="relative bg-gradient-to-br from-primary/10 to-primary/5 py-20 px-4">
+        <div className="container mx-auto text-center">
+          <div className="max-w-4xl mx-auto">
+            <h1 className="text-4xl md:text-6xl font-bold mb-6 text-foreground">
+              Reducing Food Waste, <br />
+              <span className="text-primary">Fighting Hunger</span>
+            </h1>
+            <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+              Connect food donors with NGOs and communities in need. Every meal shared makes a difference in someone's life and helps protect our planet.
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              {user ? (
+                <Button asChild size="lg" className="text-lg px-8">
+                  <Link to="/dashboard">
+                    Go to Dashboard
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </Link>
+                </Button>
+              ) : (
+                <>
+                  <Button asChild size="lg" className="text-lg px-8">
+                    <Link to="/auth">
+                      Donate Food
+                      <Heart className="ml-2 h-5 w-5" />
+                    </Link>
+                  </Button>
+                  <Button asChild variant="outline" size="lg" className="text-lg px-8">
+                    <Link to="/browse">
+                      Find Food
+                      <Utensils className="ml-2 h-5 w-5" />
+                    </Link>
+                  </Button>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Impact Statistics */}
+      {stats && (
+        <section className="py-16 px-4 bg-background">
+          <div className="container mx-auto">
+            <h2 className="text-3xl font-bold text-center mb-12">Our Impact</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+              <Card className="text-center">
+                <CardHeader>
+                  <Utensils className="h-12 w-12 text-primary mx-auto mb-4" />
+                  <CardTitle className="text-3xl font-bold text-primary">
+                    {stats.total_meals_served.toLocaleString()}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground">Meals Served</p>
+                </CardContent>
+              </Card>
+
+              <Card className="text-center">
+                <CardHeader>
+                  <Heart className="h-12 w-12 text-success mx-auto mb-4" />
+                  <CardTitle className="text-3xl font-bold text-success">
+                    {stats.total_food_saved_kg.toLocaleString()}kg
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground">Food Saved</p>
+                </CardContent>
+              </Card>
+
+              <Card className="text-center">
+                <CardHeader>
+                  <Building2 className="h-12 w-12 text-info mx-auto mb-4" />
+                  <CardTitle className="text-3xl font-bold text-info">
+                    {stats.total_ngos_onboarded}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground">NGOs Onboarded</p>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* How It Works */}
+      <section className="py-16 px-4 bg-muted/50">
+        <div className="container mx-auto">
+          <h2 className="text-3xl font-bold text-center mb-12">How It Works</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            <div className="text-center">
+              <div className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Heart className="h-8 w-8 text-primary" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Donate</h3>
+              <p className="text-muted-foreground">
+                List your surplus food with details about quantity, location, and pickup times.
+              </p>
+            </div>
+
+            <div className="text-center">
+              <div className="bg-success/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Users className="h-8 w-8 text-success" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Connect</h3>
+              <p className="text-muted-foreground">
+                NGOs and communities browse available food and claim what they need.
+              </p>
+            </div>
+
+            <div className="text-center">
+              <div className="bg-info/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <CheckCircle className="h-8 w-8 text-info" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Share</h3>
+              <p className="text-muted-foreground">
+                Coordinate pickup times and complete the food sharing process.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Features */}
+      <section className="py-16 px-4 bg-background">
+        <div className="container mx-auto">
+          <h2 className="text-3xl font-bold text-center mb-12">Platform Features</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <Card>
+              <CardHeader>
+                <Clock className="h-8 w-8 text-primary mb-2" />
+                <CardTitle>Real-time Updates</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  Get instant notifications when food is available or claimed in your area.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <MapPin className="h-8 w-8 text-success mb-2" />
+                <CardTitle>Location-based</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  Find food donations near you and optimize pickup routes for efficiency.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <Users className="h-8 w-8 text-info mb-2" />
+                <CardTitle>Community Driven</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  Join a network of caring individuals and organizations making a difference.
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Call to Action */}
+      <section className="py-16 px-4 bg-primary/10">
+        <div className="container mx-auto text-center">
+          <h2 className="text-3xl font-bold mb-4">Ready to Make a Difference?</h2>
+          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+            Join our community today and start sharing food, reducing waste, and fighting hunger in your area.
+          </p>
+          
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button asChild size="lg">
+              <Link to="/auth">
+                Get Started
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Link>
+            </Button>
+            <Button asChild variant="outline" size="lg">
+              <Link to="/about">
+                Learn More
+              </Link>
+            </Button>
+          </div>
+        </div>
+      </section>
     </div>
   );
 };
