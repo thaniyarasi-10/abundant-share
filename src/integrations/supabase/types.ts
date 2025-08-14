@@ -14,16 +14,307 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      claims: {
+        Row: {
+          claimed_at: string
+          claimed_by: string
+          completed_at: string | null
+          id: string
+          listing_id: string
+          notes: string | null
+          pickup_scheduled_at: string | null
+        }
+        Insert: {
+          claimed_at?: string
+          claimed_by: string
+          completed_at?: string | null
+          id?: string
+          listing_id: string
+          notes?: string | null
+          pickup_scheduled_at?: string | null
+        }
+        Update: {
+          claimed_at?: string
+          claimed_by?: string
+          completed_at?: string | null
+          id?: string
+          listing_id?: string
+          notes?: string | null
+          pickup_scheduled_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "claims_claimed_by_fkey"
+            columns: ["claimed_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "claims_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "food_listings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      contact_messages: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          message: string
+          name: string
+          subject: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          message: string
+          name: string
+          subject: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          message?: string
+          name?: string
+          subject?: string
+        }
+        Relationships: []
+      }
+      food_listings: {
+        Row: {
+          category: Database["public"]["Enums"]["food_category"]
+          claimed_at: string | null
+          claimed_by: string | null
+          completed_at: string | null
+          created_at: string
+          description: string
+          donor_id: string
+          expiry_date: string
+          id: string
+          images: string[] | null
+          pickup_location: string
+          pickup_time_end: string
+          pickup_time_start: string
+          quantity: string
+          status: Database["public"]["Enums"]["listing_status"]
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category: Database["public"]["Enums"]["food_category"]
+          claimed_at?: string | null
+          claimed_by?: string | null
+          completed_at?: string | null
+          created_at?: string
+          description: string
+          donor_id: string
+          expiry_date: string
+          id?: string
+          images?: string[] | null
+          pickup_location: string
+          pickup_time_end: string
+          pickup_time_start: string
+          quantity: string
+          status?: Database["public"]["Enums"]["listing_status"]
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: Database["public"]["Enums"]["food_category"]
+          claimed_at?: string | null
+          claimed_by?: string | null
+          completed_at?: string | null
+          created_at?: string
+          description?: string
+          donor_id?: string
+          expiry_date?: string
+          id?: string
+          images?: string[] | null
+          pickup_location?: string
+          pickup_time_end?: string
+          pickup_time_start?: string
+          quantity?: string
+          status?: Database["public"]["Enums"]["listing_status"]
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "food_listings_claimed_by_fkey"
+            columns: ["claimed_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "food_listings_donor_id_fkey"
+            columns: ["donor_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      notifications: {
+        Row: {
+          created_at: string
+          id: string
+          listing_id: string | null
+          message: string
+          read: boolean
+          title: string
+          type: Database["public"]["Enums"]["notification_type"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          listing_id?: string | null
+          message: string
+          read?: boolean
+          title: string
+          type: Database["public"]["Enums"]["notification_type"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          listing_id?: string | null
+          message?: string
+          read?: boolean
+          title?: string
+          type?: Database["public"]["Enums"]["notification_type"]
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "food_listings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notifications_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      platform_stats: {
+        Row: {
+          id: string
+          total_food_saved_kg: number
+          total_meals_served: number
+          total_ngos_onboarded: number
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          total_food_saved_kg?: number
+          total_meals_served?: number
+          total_ngos_onboarded?: number
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          total_food_saved_kg?: number
+          total_meals_served?: number
+          total_ngos_onboarded?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          address: string | null
+          avatar_url: string | null
+          city: string | null
+          created_at: string
+          full_name: string
+          id: string
+          organization_name: string | null
+          phone: string | null
+          postal_code: string | null
+          role: Database["public"]["Enums"]["user_role"]
+          state: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          address?: string | null
+          avatar_url?: string | null
+          city?: string | null
+          created_at?: string
+          full_name: string
+          id?: string
+          organization_name?: string | null
+          phone?: string | null
+          postal_code?: string | null
+          role?: Database["public"]["Enums"]["user_role"]
+          state?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          address?: string | null
+          avatar_url?: string | null
+          city?: string | null
+          created_at?: string
+          full_name?: string
+          id?: string
+          organization_name?: string | null
+          phone?: string | null
+          postal_code?: string | null
+          role?: Database["public"]["Enums"]["user_role"]
+          state?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      create_notification: {
+        Args: {
+          p_user_id: string
+          p_type: Database["public"]["Enums"]["notification_type"]
+          p_title: string
+          p_message: string
+          p_listing_id?: string
+        }
+        Returns: string
+      }
     }
     Enums: {
-      [_ in never]: never
+      food_category:
+        | "vegetables"
+        | "fruits"
+        | "grains"
+        | "dairy"
+        | "meat"
+        | "bakery"
+        | "prepared_food"
+        | "other"
+      listing_status: "available" | "claimed" | "completed" | "expired"
+      notification_type:
+        | "new_listing"
+        | "listing_claimed"
+        | "pickup_scheduled"
+        | "pickup_completed"
+        | "listing_expired"
+      user_role: "donor" | "ngo" | "admin"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +441,26 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      food_category: [
+        "vegetables",
+        "fruits",
+        "grains",
+        "dairy",
+        "meat",
+        "bakery",
+        "prepared_food",
+        "other",
+      ],
+      listing_status: ["available", "claimed", "completed", "expired"],
+      notification_type: [
+        "new_listing",
+        "listing_claimed",
+        "pickup_scheduled",
+        "pickup_completed",
+        "listing_expired",
+      ],
+      user_role: ["donor", "ngo", "admin"],
+    },
   },
 } as const
