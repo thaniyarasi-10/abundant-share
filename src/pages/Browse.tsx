@@ -132,15 +132,14 @@ const Browse: React.FC = () => {
   };
 
   const foodCategories: { value: FoodCategory | 'all'; label: string }[] = [
-    { value: 'all', label: 'All Categories' },
-    { value: 'vegetables', label: 'Vegetables' },
-    { value: 'fruits', label: 'Fruits' },
-    { value: 'grains', label: 'Grains' },
-    { value: 'dairy', label: 'Dairy' },
-    { value: 'meat', label: 'Meat' },
-    { value: 'bakery', label: 'Bakery' },
-    { value: 'prepared_food', label: 'Prepared Food' },
-    { value: 'other', label: 'Other' },
+    { label: "All Categories", value: "all" },
+    { label: "Vegetarian", value: "veg" },
+    { label: "Non-Vegetarian", value: "non_veg" },
+    { label: "Dairy", value: "dairy" },
+    { label: "Bakery", value: "bakery" },
+    { label: "Packaged", value: "packaged" },
+    { label: "Cooked", value: "cooked" },
+    { label: "Other", value: "other" },
   ];
 
   if (loading) {

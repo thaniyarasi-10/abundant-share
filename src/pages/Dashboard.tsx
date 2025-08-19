@@ -37,8 +37,8 @@ const Dashboard: React.FC = () => {
           if (listingsData) setListings(listingsData as any);
         }
 
-        // Fetch user's claims if they're an NGO or recipient
-        if (profile?.role === 'ngo' || profile?.role === 'admin') {
+        // Fetch user's claims if they're a recipient or admin
+        if (profile?.role === 'recipient' || profile?.role === 'admin') {
           const { data: claimsData } = await supabase
             .from('claims')
             .select(`
@@ -107,7 +107,7 @@ const Dashboard: React.FC = () => {
           {(profile?.role === 'donor' || profile?.role === 'admin') && (
             <TabsTrigger value="listings">My Listings</TabsTrigger>
           )}
-          {(profile?.role === 'ngo' || profile?.role === 'admin') && (
+          {(profile?.role === 'recipient' || profile?.role === 'admin') && (
             <TabsTrigger value="claims">My Claims</TabsTrigger>
           )}
         </TabsList>
@@ -184,7 +184,7 @@ const Dashboard: React.FC = () => {
         )}
 
         {/* Claims Tab */}
-        {(profile?.role === 'ngo' || profile?.role === 'admin') && (
+        {(profile?.role === 'recipient' || profile?.role === 'admin') && (
           <TabsContent value="claims" className="space-y-6">
             <div className="grid gap-6">
               {claims.length === 0 ? (

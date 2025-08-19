@@ -36,7 +36,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
               .eq('user_id', session.user.id)
               .single();
             
-            setProfile(profileData);
+            if (profileData) {
+              // Map old 'ngo' role to 'recipient'
+              const mappedProfile = {
+                ...profileData,
+                role: profileData.role === 'ngo' ? 'recipient' : profileData.role
+              } as Profile;
+              setProfile(mappedProfile);
+            }
           }, 0);
         } else {
           setProfile(null);
@@ -58,7 +65,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           .eq('user_id', session.user.id)
           .single()
           .then(({ data: profileData }) => {
-            setProfile(profileData);
+            if (profileData) {
+              // Map old 'ngo' role to 'recipient'
+              const mappedProfile = {
+                ...profileData,
+                role: profileData.role === 'ngo' ? 'recipient' : profileData.role
+              } as Profile;
+              setProfile(mappedProfile);
+            }
             setLoading(false);
           });
       } else {
@@ -161,9 +175,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (!user) throw new Error('No user logged in');
 
     try {
+      // Map 'recipient' back to 'ngo' for database storage if needed
+      const dbUpdates = {
+        ...updates,
+        role: updates.role === 'recipient' ? 'ngo' as any : updates.role
+      };
+
       const { data, error } = await supabase
         .from('profiles')
-        .update(updates)
+        .update(dbUpdates)
         .eq('user_id', user.id)
         .select()
         .single();
@@ -177,7 +197,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         throw error;
       }
 
-      setProfile(data);
+      // Map back for frontend state
+      const mappedProfile = {
+        ...data,
+        role: data.role === 'ngo' ? 'recipient' : data.role
+      } as Profile;
+      
+      setProfile(mappedProfile);
       toast({
         title: "Profile updated",
         description: "Your profile has been successfully updated.",

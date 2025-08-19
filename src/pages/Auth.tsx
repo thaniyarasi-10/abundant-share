@@ -174,12 +174,12 @@ const Auth: React.FC = () => {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="donor">Food Donor</SelectItem>
-                      <SelectItem value="ngo">NGO/Organization</SelectItem>
+                      <SelectItem value="recipient">NGO/Organization</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 
-                {signUpData.role === 'ngo' && (
+                {signUpData.role === 'recipient' && (
                   <div className="space-y-2">
                     <Label htmlFor="signup-organization">Organization Name</Label>
                     <Input

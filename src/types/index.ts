@@ -1,25 +1,27 @@
-// Type definitions for the Surplus Food Sharing Platform
+// Type definitions for the Food Surplus Sharing Platform
 
-export type UserRole = 'donor' | 'ngo' | 'admin';
+export type UserRole = 'donor' | 'recipient' | 'admin';
 
 export type FoodCategory = 
-  | 'vegetables'
-  | 'fruits' 
-  | 'grains'
+  | 'veg'
+  | 'non_veg'
   | 'dairy'
-  | 'meat'
   | 'bakery'
-  | 'prepared_food'
+  | 'packaged'
+  | 'cooked'
   | 'other';
 
-export type ListingStatus = 'available' | 'claimed' | 'completed' | 'expired';
+export type ListingStatus = 'available' | 'booked' | 'expired' | 'completed';
+
+export type BookingStatus = 'pending' | 'collected' | 'cancelled';
 
 export type NotificationType = 
   | 'new_listing'
   | 'listing_claimed'
   | 'pickup_scheduled'
   | 'pickup_completed'
-  | 'listing_expired';
+  | 'listing_expired'
+  | 'expiry_reminder';
 
 export interface Profile {
   id: string;
@@ -32,6 +34,7 @@ export interface Profile {
   city?: string;
   state?: string;
   postal_code?: string;
+  location?: string; // New location field
   avatar_url?: string;
   created_at: string;
   updated_at: string;
@@ -40,6 +43,7 @@ export interface Profile {
 export interface FoodListing {
   id: string;
   donor_id: string;
+  name: string; // Updated from title
   title: string;
   description: string;
   quantity: string;
@@ -48,11 +52,14 @@ export interface FoodListing {
   pickup_time_start: string;
   pickup_time_end: string;
   pickup_location: string;
+  pickup_slots: any[]; // JSON array of pickup slots
   status: ListingStatus;
   claimed_by?: string;
   claimed_at?: string;
   completed_at?: string;
   images: string[];
+  image_url?: string;
+  is_urgent?: boolean;
   created_at: string;
   updated_at: string;
   // Relations
@@ -65,8 +72,11 @@ export interface Claim {
   listing_id: string;
   claimed_by: string;
   claimed_at: string;
+  quantity_booked?: string;
+  pickup_time?: string;
   pickup_scheduled_at?: string;
   completed_at?: string;
+  status: BookingStatus;
   notes?: string;
   // Relations
   food_listings?: FoodListing;

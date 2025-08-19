@@ -114,7 +114,7 @@ const Profile: React.FC = () => {
                 </div>
               </div>
 
-              {profile.role === 'ngo' && (
+              {profile.role === 'recipient' && (
                 <div className="space-y-2">
                   <Label htmlFor="organization_name">Organization Name</Label>
                   <Input
@@ -200,7 +200,7 @@ const Profile: React.FC = () => {
                 <div>
                   <Label className="text-sm font-medium text-muted-foreground">Role</Label>
                   <p className="text-sm font-medium capitalize">
-                    {profile.role === 'ngo' ? 'NGO/Organization' : profile.role}
+                    {profile.role === 'recipient' ? 'NGO/Organization' : profile.role}
                   </p>
                 </div>
                 <div>
