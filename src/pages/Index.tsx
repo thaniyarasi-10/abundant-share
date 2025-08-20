@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { supabase } from '@/integrations/supabase/client';
 import { PlatformStats } from '@/types';
-import { Heart, Users, Utensils, Building2, ArrowRight, CheckCircle, Clock, MapPin } from 'lucide-react';
+import { Users, Utensils, Building2, ArrowRight, CheckCircle, Clock, MapPin } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
 const Index = () => {
@@ -47,20 +47,12 @@ const Index = () => {
                   </Link>
                 </Button>
               ) : (
-                <>
-                  <Button asChild size="lg" className="text-lg px-8">
-                    <Link to="/auth">
-                      Donate Food
-                      <Heart className="ml-2 h-5 w-5" />
-                    </Link>
-                  </Button>
-                  <Button asChild variant="outline" size="lg" className="text-lg px-8">
-                    <Link to="/browse">
-                      Find Food
-                      <Utensils className="ml-2 h-5 w-5" />
-                    </Link>
-                  </Button>
-                </>
+                <Button asChild size="lg" className="text-lg px-8">
+                  <Link to="/auth">
+                    Get Started
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </Link>
+                </Button>
               )}
             </div>
           </div>
@@ -87,7 +79,7 @@ const Index = () => {
 
               <Card className="text-center">
                 <CardHeader>
-                  <Heart className="h-12 w-12 text-success mx-auto mb-4" />
+                  <Users className="h-12 w-12 text-success mx-auto mb-4" />
                   <CardTitle className="text-3xl font-bold text-success">
                     {stats.total_food_saved_kg.toLocaleString()}kg
                   </CardTitle>
@@ -120,7 +112,7 @@ const Index = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             <div className="text-center">
               <div className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Heart className="h-8 w-8 text-primary" />
+                <Utensils className="h-8 w-8 text-primary" />
               </div>
               <h3 className="text-xl font-semibold mb-2">Donate</h3>
               <p className="text-muted-foreground">

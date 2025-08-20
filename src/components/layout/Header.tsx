@@ -10,8 +10,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useAuth } from '@/contexts/AuthContext';
-import { Heart, User, Settings, LogOut, Bell, Menu } from 'lucide-react';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { User, Settings, LogOut, Bell } from 'lucide-react';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
 
 const Header: React.FC = () => {
   const { user, profile, signOut } = useAuth();
@@ -26,96 +26,16 @@ const Header: React.FC = () => {
     }
   };
 
-  const MobileNav = () => (
-    <Sheet>
-      <SheetTrigger asChild>
-        <Button variant="ghost" size="icon" className="md:hidden">
-          <Menu className="h-5 w-5" />
-        </Button>
-      </SheetTrigger>
-      <SheetContent side="left">
-        <div className="flex flex-col space-y-4 mt-4">
-          <Link to="/" className="text-lg font-medium">
-            Home
-          </Link>
-          {user ? (
-            <>
-              <Link to="/dashboard" className="text-lg font-medium">
-                Dashboard
-              </Link>
-              <Link to="/browse" className="text-lg font-medium">
-                Browse Food
-              </Link>
-              <Link to="/notifications" className="text-lg font-medium">
-                Notifications
-              </Link>
-              {profile?.role === 'admin' && (
-                <Link to="/admin" className="text-lg font-medium">
-                  Admin Panel
-                </Link>
-              )}
-            </>
-          ) : (
-            <>
-              <Link to="/browse" className="text-lg font-medium">
-                Browse Food
-              </Link>
-              <Link to="/auth" className="text-lg font-medium">
-                Sign In
-              </Link>
-            </>
-          )}
-          <Link to="/about" className="text-lg font-medium">
-            About
-          </Link>
-          <Link to="/contact" className="text-lg font-medium">
-            Contact
-          </Link>
-        </div>
-      </SheetContent>
-    </Sheet>
-  );
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between">
-        <div className="flex items-center space-x-4">
-          <MobileNav />
-          <Link to="/" className="flex items-center space-x-2">
-            <Heart className="h-6 w-6 text-primary" />
-            <span className="text-xl font-bold text-primary">FoodShare</span>
-          </Link>
-        </div>
+        <Link to="/" className="flex items-center space-x-2">
+          <span className="text-xl font-bold text-primary">FoodShare</span>
+        </Link>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center space-x-6">
-          <Link to="/" className="text-sm font-medium transition-colors hover:text-primary">
-            Home
-          </Link>
-          {user ? (
-            <>
-              <Link to="/dashboard" className="text-sm font-medium transition-colors hover:text-primary">
-                Dashboard
-              </Link>
-              <Link to="/browse" className="text-sm font-medium transition-colors hover:text-primary">
-                Browse Food
-              </Link>
-            </>
-          ) : (
-            <Link to="/browse" className="text-sm font-medium transition-colors hover:text-primary">
-              Browse Food
-            </Link>
-          )}
-          <Link to="/about" className="text-sm font-medium transition-colors hover:text-primary">
-            About
-          </Link>
-          <Link to="/contact" className="text-sm font-medium transition-colors hover:text-primary">
-            Contact
-          </Link>
-        </nav>
-
-        {/* User Actions */}
         <div className="flex items-center space-x-4">
+          <ThemeToggle />
           {user ? (
             <>
               <Button
@@ -174,7 +94,7 @@ const Header: React.FC = () => {
               </DropdownMenu>
             </>
           ) : (
-            <div className="hidden md:flex items-center space-x-2">
+            <div className="flex items-center space-x-2">
               <Button variant="ghost" onClick={() => navigate('/auth')}>
                 Sign In
               </Button>
