@@ -314,7 +314,7 @@ export type Database = {
         | "pickup_scheduled"
         | "pickup_completed"
         | "listing_expired"
-      user_role: "donor" | "ngo" | "admin"
+      user_role: "donor" | "ngo" | "admin" | "recipient"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -460,7 +460,7 @@ export const Constants = {
         "pickup_completed",
         "listing_expired",
       ],
-      user_role: ["donor", "ngo", "admin"],
+      user_role: ["donor", "ngo", "admin", "recipient"],
     },
   },
 } as const

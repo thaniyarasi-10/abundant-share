@@ -27,7 +27,7 @@ const Index = () => {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-primary/10 to-primary/5 py-20 px-4">
+      <section className="relative bg-gradient-to-br from-primary/10 to-primary/5 h-screen flex items-center px-4">
         <div className="container mx-auto text-center">
           <div className="max-w-4xl mx-auto">
             <h1 className="text-4xl md:text-6xl font-bold mb-6 text-foreground">
@@ -61,7 +61,7 @@ const Index = () => {
 
       {/* Impact Statistics */}
       {stats && (
-        <section className="py-16 px-4 bg-background">
+        <section className="h-screen flex items-center px-4 bg-background">
           <div className="container mx-auto">
             <h2 className="text-3xl font-bold text-center mb-12">Our Impact</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
@@ -106,7 +106,7 @@ const Index = () => {
       )}
 
       {/* How It Works */}
-      <section className="py-16 px-4 bg-muted/50">
+      <section className="h-screen flex items-center px-4 bg-muted/50">
         <div className="container mx-auto">
           <h2 className="text-3xl font-bold text-center mb-12">How It Works</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
@@ -144,7 +144,7 @@ const Index = () => {
       </section>
 
       {/* Features */}
-      <section className="py-16 px-4 bg-background">
+      <section className="h-screen flex items-center px-4 bg-background">
         <div className="container mx-auto">
           <h2 className="text-3xl font-bold text-center mb-12">Platform Features</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -188,7 +188,7 @@ const Index = () => {
       </section>
 
       {/* Call to Action */}
-      <section className="py-16 px-4 bg-primary/10">
+      <section className="h-screen flex items-center px-4 bg-primary/10">
         <div className="container mx-auto text-center">
           <h2 className="text-3xl font-bold mb-4">Ready to Make a Difference?</h2>
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">

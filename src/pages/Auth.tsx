@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/contexts/AuthContext';
 import { UserRole } from '@/types';
-import { Heart, Loader2 } from 'lucide-react';
+import { Loader2, Utensils } from 'lucide-react';
 
 const Auth: React.FC = () => {
   const { user, signIn, signUp, loading } = useAuth();
@@ -84,7 +84,7 @@ const Auth: React.FC = () => {
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <div className="flex items-center justify-center mb-4">
-            <Heart className="h-8 w-8 text-primary" />
+            <Utensils className="h-8 w-8 text-primary" />
           </div>
           <CardTitle className="text-2xl">Welcome to FoodShare</CardTitle>
           <CardDescription>
@@ -175,6 +175,7 @@ const Auth: React.FC = () => {
                     <SelectContent>
                       <SelectItem value="donor">Food Donor</SelectItem>
                       <SelectItem value="recipient">NGO/Organization</SelectItem>
+                      <SelectItem value="admin">Administrator</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
