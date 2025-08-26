@@ -37,12 +37,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
               .single();
             
             if (profileData) {
-              // Map old 'ngo' role to 'recipient'
-              const mappedProfile = {
-                ...profileData,
-                role: profileData.role === 'ngo' ? 'recipient' : profileData.role
-              } as Profile;
-              setProfile(mappedProfile);
+              setProfile(profileData as Profile);
             }
           }, 0);
         } else {
@@ -66,12 +61,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           .single()
           .then(({ data: profileData }) => {
             if (profileData) {
-              // Map old 'ngo' role to 'recipient'
-              const mappedProfile = {
-                ...profileData,
-                role: profileData.role === 'ngo' ? 'recipient' : profileData.role
-              } as Profile;
-              setProfile(mappedProfile);
+              setProfile(profileData as Profile);
             }
             setLoading(false);
           });
@@ -175,15 +165,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (!user) throw new Error('No user logged in');
 
     try {
-      // Map 'recipient' back to 'ngo' for database storage if needed
-      const dbUpdates = {
-        ...updates,
-        role: updates.role === 'recipient' ? 'ngo' as any : updates.role
-      };
-
       const { data, error } = await supabase
         .from('profiles')
-        .update(dbUpdates)
+        .update(updates)
         .eq('user_id', user.id)
         .select()
         .single();
@@ -197,13 +181,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         throw error;
       }
 
-      // Map back for frontend state
-      const mappedProfile = {
-        ...data,
-        role: data.role === 'ngo' ? 'recipient' : data.role
-      } as Profile;
-      
-      setProfile(mappedProfile);
+      setProfile(data as Profile);
       toast({
         title: "Profile updated",
         description: "Your profile has been successfully updated.",
