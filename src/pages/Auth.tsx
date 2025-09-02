@@ -70,7 +70,7 @@ const Auth: React.FC = () => {
       });
       
       if (!result.error) {
-        // Show success message - user needs to verify email
+        // Account created successfully, user will be redirected automatically
       }
     } catch (error) {
       console.error('Sign up error:', error);

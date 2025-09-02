@@ -103,16 +103,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signUp = async (email: string, password: string, userData: Partial<Profile>) => {
     try {
-      const redirectUrl = `${window.location.origin}/`;
-      
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          emailRedirectTo: redirectUrl,
+          emailRedirectTo: `${window.location.origin}/dashboard`,
           data: {
             full_name: userData.full_name,
             role: userData.role,
+            organization_name: userData.organization_name,
+            phone: userData.phone,
           },
         },
       });
@@ -126,10 +126,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return { error };
       }
 
-      toast({
-        title: "Account created!",
-        description: "Please check your email to verify your account.",
-      });
+      // Check if user was automatically confirmed (no email verification needed)
+      if (data.user && !data.user.email_confirmed_at) {
+        toast({
+          title: "Account created!",
+          description: "Welcome to FoodShare! Redirecting to dashboard...",
+        });
+      } else {
+        toast({
+          title: "Welcome to FoodShare!",
+          description: "Your account has been created successfully.",
+        });
+      }
 
       return { data };
     } catch (error) {
