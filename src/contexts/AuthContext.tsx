@@ -103,18 +103,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signUp = async (email: string, password: string, userData: Partial<Profile>) => {
     try {
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          emailRedirectTo: `${window.location.origin}/dashboard`,
-          data: {
-            full_name: userData.full_name,
-            role: userData.role,
-            organization_name: userData.organization_name,
-            phone: userData.phone,
-          },
-        },
+      // Get client IP for rate limiting
+      const ip_address = await fetch('https://api.ipify.org?format=json')
+        .then(r => r.json())
+        .then(data => data.ip)
+        .catch(() => 'unknown');
+
+      // Use secure signup edge function with rate limiting
+      const { data, error } = await supabase.functions.invoke('secure-signup', {
+        body: {
+          email,
+          password,
+          userData,
+          ip_address
+        }
       });
 
       if (error) {
@@ -126,13 +128,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return { error };
       }
 
-      // Check if user was automatically confirmed (no email verification needed)
-      if (data.user && !data.user.email_confirmed_at) {
+      if (data?.error) {
         toast({
-          title: "Account created!",
-          description: "Welcome to FoodShare! Redirecting to dashboard...",
+          title: "Sign Up Failed",
+          description: data.error,
+          variant: "destructive",
         });
-      } else {
+        return { error: data };
+      }
+
+      // Sign in immediately after successful signup
+      const signInResult = await signIn(email, password);
+      if (!signInResult.error) {
         toast({
           title: "Welcome to FoodShare!",
           description: "Your account has been created successfully.",
@@ -142,7 +149,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return { data };
     } catch (error) {
       console.error('Sign up error:', error);
-      return { error };
+      const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
+      toast({
+        title: "Sign Up Failed",
+        description: errorMessage,
+        variant: "destructive",
+      });
+      return { error: { message: errorMessage } };
     }
   };
 

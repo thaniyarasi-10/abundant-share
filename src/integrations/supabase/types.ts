@@ -80,13 +80,6 @@ export type Database = {
             foreignKeyName: "claims_claimed_by_fkey"
             columns: ["claimed_by"]
             isOneToOne: false
-            referencedRelation: "donor_profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "claims_claimed_by_fkey"
-            columns: ["claimed_by"]
-            isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["user_id"]
           },
@@ -189,21 +182,7 @@ export type Database = {
             foreignKeyName: "food_listings_claimed_by_fkey"
             columns: ["claimed_by"]
             isOneToOne: false
-            referencedRelation: "donor_profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "food_listings_claimed_by_fkey"
-            columns: ["claimed_by"]
-            isOneToOne: false
             referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "food_listings_donor_id_fkey"
-            columns: ["donor_id"]
-            isOneToOne: false
-            referencedRelation: "donor_profiles"
             referencedColumns: ["user_id"]
           },
           {
@@ -253,13 +232,6 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "food_listings"
             referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "notifications_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "donor_profiles"
-            referencedColumns: ["user_id"]
           },
           {
             foreignKeyName: "notifications_user_id_fkey"
@@ -368,36 +340,7 @@ export type Database = {
       }
     }
     Views: {
-      donor_profiles: {
-        Row: {
-          avatar_url: string | null
-          city: string | null
-          created_at: string | null
-          full_name: string | null
-          organization_name: string | null
-          state: string | null
-          user_id: string | null
-        }
-        Insert: {
-          avatar_url?: string | null
-          city?: string | null
-          created_at?: string | null
-          full_name?: string | null
-          organization_name?: string | null
-          state?: string | null
-          user_id?: string | null
-        }
-        Update: {
-          avatar_url?: string | null
-          city?: string | null
-          created_at?: string | null
-          full_name?: string | null
-          organization_name?: string | null
-          state?: string | null
-          user_id?: string | null
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Functions: {
       create_notification: {
@@ -409,6 +352,18 @@ export type Database = {
           p_user_id: string
         }
         Returns: string
+      }
+      get_donor_profile_for_listing: {
+        Args: { listing_id: string }
+        Returns: {
+          avatar_url: string
+          city: string
+          created_at: string
+          full_name: string
+          organization_name: string
+          state: string
+          user_id: string
+        }[]
       }
       is_admin: {
         Args: Record<PropertyKey, never>
