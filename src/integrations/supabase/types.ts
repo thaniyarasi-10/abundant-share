@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      audit_logs: {
+        Row: {
+          action: string
+          id: string
+          new_values: Json | null
+          old_values: Json | null
+          record_id: string
+          table_name: string
+          timestamp: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          id?: string
+          new_values?: Json | null
+          old_values?: Json | null
+          record_id: string
+          table_name: string
+          timestamp?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          id?: string
+          new_values?: Json | null
+          old_values?: Json | null
+          record_id?: string
+          table_name?: string
+          timestamp?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       claims: {
         Row: {
           claimed_at: string
@@ -43,6 +76,13 @@ export type Database = {
           pickup_scheduled_at?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "claims_claimed_by_fkey"
+            columns: ["claimed_by"]
+            isOneToOne: false
+            referencedRelation: "donor_profiles"
+            referencedColumns: ["user_id"]
+          },
           {
             foreignKeyName: "claims_claimed_by_fkey"
             columns: ["claimed_by"]
@@ -149,7 +189,21 @@ export type Database = {
             foreignKeyName: "food_listings_claimed_by_fkey"
             columns: ["claimed_by"]
             isOneToOne: false
+            referencedRelation: "donor_profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "food_listings_claimed_by_fkey"
+            columns: ["claimed_by"]
+            isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "food_listings_donor_id_fkey"
+            columns: ["donor_id"]
+            isOneToOne: false
+            referencedRelation: "donor_profiles"
             referencedColumns: ["user_id"]
           },
           {
@@ -199,6 +253,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "food_listings"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notifications_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "donor_profiles"
+            referencedColumns: ["user_id"]
           },
           {
             foreignKeyName: "notifications_user_id_fkey"
@@ -281,9 +342,62 @@ export type Database = {
         }
         Relationships: []
       }
+      signup_attempts: {
+        Row: {
+          attempt_time: string | null
+          email: string | null
+          id: string
+          ip_address: unknown | null
+          success: boolean | null
+        }
+        Insert: {
+          attempt_time?: string | null
+          email?: string | null
+          id?: string
+          ip_address?: unknown | null
+          success?: boolean | null
+        }
+        Update: {
+          attempt_time?: string | null
+          email?: string | null
+          id?: string
+          ip_address?: unknown | null
+          success?: boolean | null
+        }
+        Relationships: []
+      }
     }
     Views: {
-      [_ in never]: never
+      donor_profiles: {
+        Row: {
+          avatar_url: string | null
+          city: string | null
+          created_at: string | null
+          full_name: string | null
+          organization_name: string | null
+          state: string | null
+          user_id: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          city?: string | null
+          created_at?: string | null
+          full_name?: string | null
+          organization_name?: string | null
+          state?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          city?: string | null
+          created_at?: string | null
+          full_name?: string | null
+          organization_name?: string | null
+          state?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       create_notification: {
@@ -295,6 +409,10 @@ export type Database = {
           p_user_id: string
         }
         Returns: string
+      }
+      is_admin: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
       }
     }
     Enums: {
