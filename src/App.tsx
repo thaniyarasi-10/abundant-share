@@ -18,6 +18,7 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
+import CreateListing from "./pages/CreateListing";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -61,6 +62,11 @@ const App = () => (
                   <Route path="/admin" element={
                     <ProtectedRoute requiredRole="admin">
                       <Admin />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/create-listing" element={
+                    <ProtectedRoute>
+                      <CreateListing />
                     </ProtectedRoute>
                   } />
                   
