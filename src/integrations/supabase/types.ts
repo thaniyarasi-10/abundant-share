@@ -49,6 +49,7 @@ export type Database = {
       }
       claims: {
         Row: {
+          cancelled_at: string | null
           claimed_at: string
           claimed_by: string
           completed_at: string | null
@@ -56,8 +57,12 @@ export type Database = {
           listing_id: string
           notes: string | null
           pickup_scheduled_at: string | null
+          quantity_requested: number | null
+          received_at: string | null
+          status: Database["public"]["Enums"]["booking_status"] | null
         }
         Insert: {
+          cancelled_at?: string | null
           claimed_at?: string
           claimed_by: string
           completed_at?: string | null
@@ -65,8 +70,12 @@ export type Database = {
           listing_id: string
           notes?: string | null
           pickup_scheduled_at?: string | null
+          quantity_requested?: number | null
+          received_at?: string | null
+          status?: Database["public"]["Enums"]["booking_status"] | null
         }
         Update: {
+          cancelled_at?: string | null
           claimed_at?: string
           claimed_by?: string
           completed_at?: string | null
@@ -74,6 +83,9 @@ export type Database = {
           listing_id?: string
           notes?: string | null
           pickup_scheduled_at?: string | null
+          quantity_requested?: number | null
+          received_at?: string | null
+          status?: Database["public"]["Enums"]["booking_status"] | null
         }
         Relationships: [
           {
@@ -130,6 +142,7 @@ export type Database = {
           donor_id: string
           expiry_date: string
           id: string
+          image_urls: string[] | null
           images: string[] | null
           pickup_location: string
           pickup_time_end: string
@@ -149,6 +162,7 @@ export type Database = {
           donor_id: string
           expiry_date: string
           id?: string
+          image_urls?: string[] | null
           images?: string[] | null
           pickup_location: string
           pickup_time_end: string
@@ -168,6 +182,7 @@ export type Database = {
           donor_id?: string
           expiry_date?: string
           id?: string
+          image_urls?: string[] | null
           images?: string[] | null
           pickup_location?: string
           pickup_time_end?: string
@@ -338,6 +353,33 @@ export type Database = {
         }
         Relationships: []
       }
+      user_impact: {
+        Row: {
+          food_wasted_kg: number | null
+          id: string
+          meals_donated: number | null
+          meals_received: number | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          food_wasted_kg?: number | null
+          id?: string
+          meals_donated?: number | null
+          meals_received?: number | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          food_wasted_kg?: number | null
+          id?: string
+          meals_donated?: number | null
+          meals_received?: number | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -371,6 +413,7 @@ export type Database = {
       }
     }
     Enums: {
+      booking_status: "pending" | "received" | "cancelled"
       food_category:
         | "vegetables"
         | "fruits"
@@ -515,6 +558,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      booking_status: ["pending", "received", "cancelled"],
       food_category: [
         "vegetables",
         "fruits",

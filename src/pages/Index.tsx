@@ -6,6 +6,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { PlatformStats } from '@/types';
 import { Users, Utensils, Building2, ArrowRight, CheckCircle, Clock, MapPin } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import { motion } from 'framer-motion';
+import { useRealtimeSubscription } from '@/hooks/useRealtimeSubscription';
 
 const Index = () => {
   const [stats, setStats] = useState<PlatformStats | null>(null);
@@ -24,38 +26,69 @@ const Index = () => {
     fetchStats();
   }, []);
 
+  // Real-time updates for platform stats
+  useRealtimeSubscription({
+    table: 'platform_stats',
+    event: 'UPDATE',
+    onPayload: (payload) => {
+      if (payload.new) {
+        setStats(payload.new);
+      }
+    }
+  });
+
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-primary/10 to-primary/5 h-screen flex items-center px-4">
         <div className="container mx-auto text-center">
-          <div className="max-w-4xl mx-auto">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 text-foreground">
+          <motion.div 
+            className="max-w-4xl mx-auto"
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            <motion.h1 
+              className="text-4xl md:text-6xl font-bold mb-6 text-foreground"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
               Reducing Food Waste, <br />
               <span className="text-primary">Fighting Hunger</span>
-            </h1>
-            <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+            </motion.h1>
+            <motion.p 
+              className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+            >
               Connect food donors with NGOs and communities in need. Every meal shared makes a difference in someone's life and helps protect our planet.
-            </p>
+            </motion.p>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <motion.div 
+              className="flex flex-col sm:flex-row gap-4 justify-center"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+            >
               {user ? (
-                <Button asChild size="lg" className="text-lg px-8">
+                <Button asChild size="lg" className="text-lg px-8 hover-scale">
                   <Link to="/dashboard">
                     Go to Dashboard
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Link>
                 </Button>
               ) : (
-                <Button asChild size="lg" className="text-lg px-8">
+                <Button asChild size="lg" className="text-lg px-8 hover-scale">
                   <Link to="/auth">
                     Get Started
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Link>
                 </Button>
               )}
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </div>
       </section>
 
@@ -63,43 +96,72 @@ const Index = () => {
       {stats && (
         <section className="h-screen flex items-center px-4 bg-background">
           <div className="container mx-auto">
-            <h2 className="text-3xl font-bold text-center mb-12">Our Impact</h2>
+            <motion.h2 
+              className="text-3xl font-bold text-center mb-12"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+            >
+              Our Impact
+            </motion.h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-              <Card className="text-center">
-                <CardHeader>
-                  <Utensils className="h-12 w-12 text-primary mx-auto mb-4" />
-                  <CardTitle className="text-3xl font-bold text-primary">
-                    {stats.total_meals_served.toLocaleString()}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground">Meals Served</p>
-                </CardContent>
-              </Card>
+              <motion.div
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+                viewport={{ once: true }}
+              >
+                <Card className="text-center hover-scale">
+                  <CardHeader>
+                    <Utensils className="h-12 w-12 text-primary mx-auto mb-4" />
+                    <CardTitle className="text-3xl font-bold text-primary">
+                      {stats.total_meals_served.toLocaleString()}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-muted-foreground">Meals Served</p>
+                  </CardContent>
+                </Card>
+              </motion.div>
 
-              <Card className="text-center">
-                <CardHeader>
-                  <Users className="h-12 w-12 text-success mx-auto mb-4" />
-                  <CardTitle className="text-3xl font-bold text-success">
-                    {stats.total_food_saved_kg.toLocaleString()}kg
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground">Food Saved</p>
-                </CardContent>
-              </Card>
+              <motion.div
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                viewport={{ once: true }}
+              >
+                <Card className="text-center hover-scale">
+                  <CardHeader>
+                    <Users className="h-12 w-12 text-success mx-auto mb-4" />
+                    <CardTitle className="text-3xl font-bold text-success">
+                      {stats.total_food_saved_kg.toLocaleString()}kg
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-muted-foreground">Food Saved</p>
+                  </CardContent>
+                </Card>
+              </motion.div>
 
-              <Card className="text-center">
-                <CardHeader>
-                  <Building2 className="h-12 w-12 text-info mx-auto mb-4" />
-                  <CardTitle className="text-3xl font-bold text-info">
-                    {stats.total_ngos_onboarded}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground">NGOs Onboarded</p>
-                </CardContent>
-              </Card>
+              <motion.div
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+                viewport={{ once: true }}
+              >
+                <Card className="text-center hover-scale">
+                  <CardHeader>
+                    <Building2 className="h-12 w-12 text-info mx-auto mb-4" />
+                    <CardTitle className="text-3xl font-bold text-info">
+                      {stats.total_ngos_onboarded}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-muted-foreground">NGOs Onboarded</p>
+                  </CardContent>
+                </Card>
+              </motion.div>
             </div>
           </div>
         </section>
