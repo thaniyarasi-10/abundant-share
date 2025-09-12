@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/contexts/AuthContext';
 import { UserRole } from '@/types';
 import { Loader2, Utensils } from 'lucide-react';
+import { toast } from '@/hooks/use-toast';
 
 const Auth: React.FC = () => {
   const { user, signIn, signUp, loading } = useAuth();
@@ -55,7 +56,20 @@ const Auth: React.FC = () => {
     e.preventDefault();
     
     if (signUpData.password !== signUpData.confirmPassword) {
-      alert('Passwords do not match');
+      toast({
+        title: "Password Mismatch",
+        description: "Passwords do not match. Please try again.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (signUpData.password.length < 6) {
+      toast({
+        title: "Weak Password",
+        description: "Password must be at least 6 characters long.",
+        variant: "destructive",
+      });
       return;
     }
 
@@ -69,11 +83,14 @@ const Auth: React.FC = () => {
         phone: signUpData.phone || undefined,
       });
       
-      if (!result.error) {
-        // Account created successfully, user will be redirected automatically
-      }
+      // The AuthContext handles success/error toasts and navigation
     } catch (error) {
       console.error('Sign up error:', error);
+      toast({
+        title: "Sign Up Failed",
+        description: "An unexpected error occurred. Please try again.",
+        variant: "destructive",
+      });
     } finally {
       setIsLoading(false);
     }
