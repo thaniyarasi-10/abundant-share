@@ -327,7 +327,7 @@ const Browse: React.FC = () => {
                   )}
 
                   <div className="flex justify-end">
-                    {user && profile?.role !== 'donor' && listing.donor_id !== user.id ? (
+                    {user && listing.donor_id !== user.id ? (
                       <Button 
                         onClick={() => handleClaim(listing.id)}
                         className="hover-scale"
@@ -343,7 +343,7 @@ const Browse: React.FC = () => {
                       </Button>
                     ) : (
                       <Button disabled>
-                        {profile?.role === 'donor' ? 'Donors cannot claim food' : 'Cannot claim own food'}
+                        {listing.donor_id === user.id ? 'Cannot claim own food' : 'Already claimed by you'}
                       </Button>
                     )}
                   </div>

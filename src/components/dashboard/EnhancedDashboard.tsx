@@ -58,37 +58,33 @@ const EnhancedDashboard: React.FC = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        // Fetch listings based on user role
-        if (profile?.role === 'donor' || profile?.role === 'admin') {
-          const { data: listingsData } = await supabase
-            .from('food_listings')
-            .select('*')
-            .eq('donor_id', user.id)
-            .order('created_at', { ascending: false });
-          
-          if (listingsData) setListings(listingsData as any);
-        }
+        // Fetch user's listings (when they act as donor)
+        const { data: listingsData } = await supabase
+          .from('food_listings')
+          .select('*')
+          .eq('donor_id', user.id)
+          .order('created_at', { ascending: false });
+        
+        if (listingsData) setListings(listingsData as any);
 
-        // Fetch claims
-        if (profile?.role === 'recipient' || profile?.role === 'admin') {
-          const { data: claimsData } = await supabase
-            .from('claims')
-            .select(`
-              *,
-              food_listings (
-                title,
-                description,
-                pickup_location,
-                pickup_time_start,
-                pickup_time_end,
-                profiles:donor_id (full_name, organization_name, phone)
-              )
-            `)
-            .eq('claimed_by', user.id)
-            .order('claimed_at', { ascending: false });
-          
-          if (claimsData) setClaims(claimsData as any);
-        }
+        // Fetch user's claims (when they act as recipient)
+        const { data: claimsData } = await supabase
+          .from('claims')
+          .select(`
+            *,
+            food_listings (
+              title,
+              description,
+              pickup_location,
+              pickup_time_start,
+              pickup_time_end,
+              profiles:donor_id (full_name, organization_name, phone)
+            )
+          `)
+          .eq('claimed_by', user.id)
+          .order('claimed_at', { ascending: false });
+        
+        if (claimsData) setClaims(claimsData as any);
       } catch (error) {
         console.error('Error fetching dashboard data:', error);
       } finally {
@@ -190,9 +186,7 @@ const EnhancedDashboard: React.FC = () => {
           Welcome back, {profile?.full_name || 'User'}!
         </h1>
         <p className="text-muted-foreground">
-          {profile?.role === 'donor' && "Manage your food donations and track your impact"}
-          {profile?.role === 'recipient' && "Browse available food and manage your bookings"}
-          {profile?.role === 'admin' && "Monitor platform activity and user engagement"}
+          Donate food when you have surplus or browse available food when you need it
         </p>
       </motion.div>
 
@@ -256,22 +250,18 @@ const EnhancedDashboard: React.FC = () => {
         transition={{ duration: 0.6, delay: 0.3 }}
       >
         <div className="flex flex-wrap gap-4">
-          {(profile?.role === 'donor' || profile?.role === 'admin') && (
-            <Button asChild className="hover-scale">
-              <Link to="/create-listing">
-                <Plus className="mr-2 h-4 w-4" />
-                Create New Listing
-              </Link>
-            </Button>
-          )}
-          {(profile?.role === 'recipient' || profile?.role === 'admin') && (
-            <Button asChild variant="outline" className="hover-scale">
-              <Link to="/browse">
-                <Package className="mr-2 h-4 w-4" />
-                Browse Food
-              </Link>
-            </Button>
-          )}
+          <Button asChild className="hover-scale">
+            <Link to="/create-listing">
+              <Plus className="mr-2 h-4 w-4" />
+              Create New Listing
+            </Link>
+          </Button>
+          <Button asChild variant="outline" className="hover-scale">
+            <Link to="/browse">
+              <Package className="mr-2 h-4 w-4" />
+              Browse Food
+            </Link>
+          </Button>
         </div>
       </motion.div>
 

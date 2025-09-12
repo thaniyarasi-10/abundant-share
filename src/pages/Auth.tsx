@@ -26,9 +26,6 @@ const Auth: React.FC = () => {
     password: '',
     confirmPassword: '',
     fullName: '',
-    role: 'donor' as UserRole,
-    organizationName: '',
-    phone: '',
   });
 
   // Redirect if already authenticated
@@ -78,9 +75,6 @@ const Auth: React.FC = () => {
     try {
       const result = await signUp(signUpData.email, signUpData.password, {
         full_name: signUpData.fullName,
-        role: signUpData.role,
-        organization_name: signUpData.organizationName || undefined,
-        phone: signUpData.phone || undefined,
       });
       
       // The AuthContext handles success/error toasts and navigation
@@ -180,46 +174,6 @@ const Auth: React.FC = () => {
                   />
                 </div>
                 
-                <div className="space-y-2">
-                  <Label htmlFor="signup-role">Role</Label>
-                  <Select 
-                    value={signUpData.role} 
-                    onValueChange={(value: UserRole) => setSignUpData({ ...signUpData, role: value })}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select your role" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="donor">Food Donor</SelectItem>
-                      <SelectItem value="recipient">NGO/Organization</SelectItem>
-                      <SelectItem value="admin">Administrator</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                
-                {signUpData.role === 'recipient' && (
-                  <div className="space-y-2">
-                    <Label htmlFor="signup-organization">Organization Name</Label>
-                    <Input
-                      id="signup-organization"
-                      type="text"
-                      placeholder="Your Organization Name"
-                      value={signUpData.organizationName}
-                      onChange={(e) => setSignUpData({ ...signUpData, organizationName: e.target.value })}
-                    />
-                  </div>
-                )}
-                
-                <div className="space-y-2">
-                  <Label htmlFor="signup-phone">Phone (Optional)</Label>
-                  <Input
-                    id="signup-phone"
-                    type="tel"
-                    placeholder="+1 (555) 123-4567"
-                    value={signUpData.phone}
-                    onChange={(e) => setSignUpData({ ...signUpData, phone: e.target.value })}
-                  />
-                </div>
                 
                 <div className="space-y-2">
                   <Label htmlFor="signup-password">Password</Label>

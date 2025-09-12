@@ -1,6 +1,6 @@
 // Type definitions for the Food Surplus Sharing Platform
 
-export type UserRole = 'donor' | 'recipient' | 'admin';
+export type UserRole = 'user' | 'admin';
 
 export type FoodCategory = 
   | 'veg'

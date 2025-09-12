@@ -29,6 +29,10 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   }
 
   if (requiredRole && profile?.role !== requiredRole) {
+    // Redirect non-admins away from admin routes
+    if (requiredRole === 'admin' && profile?.role !== 'admin') {
+      return <Navigate to="/dashboard" replace />;
+    }
     return <Navigate to="/dashboard" replace />;
   }
 

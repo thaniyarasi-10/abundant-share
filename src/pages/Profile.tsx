@@ -114,9 +114,9 @@ const Profile: React.FC = () => {
                 </div>
               </div>
 
-              {profile.role === 'recipient' && (
+              <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="organization_name">Organization Name</Label>
+                  <Label htmlFor="organization_name">Organization Name (Optional)</Label>
                   <Input
                     id="organization_name"
                     value={formData.organization_name}
@@ -124,7 +124,7 @@ const Profile: React.FC = () => {
                     placeholder="Enter your organization name"
                   />
                 </div>
-              )}
+              </div>
 
               <div className="space-y-2">
                 <Label htmlFor="address">Address</Label>
@@ -200,7 +200,7 @@ const Profile: React.FC = () => {
                 <div>
                   <Label className="text-sm font-medium text-muted-foreground">Role</Label>
                   <p className="text-sm font-medium capitalize">
-                    {profile.role === 'recipient' ? 'NGO/Organization' : profile.role}
+                    {profile.role === 'admin' ? 'Administrator' : 'Community Member'}
                   </p>
                 </div>
                 <div>

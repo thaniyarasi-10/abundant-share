@@ -38,6 +38,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             
             if (profileData) {
               setProfile(profileData as Profile);
+              // Redirect admins to admin dashboard
+              if (profileData.role === 'admin') {
+                window.location.href = '/admin';
+              }
             }
           }, 0);
         } else {
@@ -188,7 +192,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const { data, error } = await supabase
         .from('profiles')
-        .update(updates)
+        .update(updates as any)
         .eq('user_id', user.id)
         .select()
         .single();
