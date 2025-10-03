@@ -105,6 +105,65 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const signInWithOtp = async (email: string) => {
+    try {
+      const { data, error } = await supabase.auth.signInWithOtp({
+        email,
+        options: {
+          emailRedirectTo: `${window.location.origin}/`,
+        },
+      });
+
+      if (error) {
+        toast({
+          title: "Failed to Send OTP",
+          description: error.message,
+          variant: "destructive",
+        });
+        return { error };
+      }
+
+      toast({
+        title: "Check your email",
+        description: "We've sent you a verification code.",
+      });
+
+      return { data };
+    } catch (error) {
+      console.error('OTP sign in error:', error);
+      return { error };
+    }
+  };
+
+  const verifyOtp = async (email: string, token: string) => {
+    try {
+      const { data, error } = await supabase.auth.verifyOtp({
+        email,
+        token,
+        type: 'email',
+      });
+
+      if (error) {
+        toast({
+          title: "Verification Failed",
+          description: error.message,
+          variant: "destructive",
+        });
+        return { error };
+      }
+
+      toast({
+        title: "Welcome!",
+        description: "You've successfully signed in.",
+      });
+
+      return { data };
+    } catch (error) {
+      console.error('OTP verification error:', error);
+      return { error };
+    }
+  };
+
   const signUp = async (email: string, password: string, userData: Partial<Profile>) => {
     try {
       // Get client IP for rate limiting
@@ -226,6 +285,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     signUp,
     signOut,
     updateProfile,
+    signInWithOtp,
+    verifyOtp,
   };
 
   return (

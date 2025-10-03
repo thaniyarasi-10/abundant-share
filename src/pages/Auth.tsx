@@ -4,15 +4,13 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/contexts/AuthContext';
-import { UserRole } from '@/types';
-import { Loader2, Utensils } from 'lucide-react';
+import { Loader2, Utensils, Mail } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 
 const Auth: React.FC = () => {
-  const { user, signIn, signUp, loading } = useAuth();
+  const { user, signIn, signUp, signInWithOtp, verifyOtp, loading } = useAuth();
   const location = useLocation();
   const from = location.state?.from?.pathname || '/dashboard';
 
@@ -27,6 +25,9 @@ const Auth: React.FC = () => {
     confirmPassword: '',
     fullName: '',
   });
+  const [otpEmail, setOtpEmail] = useState('');
+  const [otpCode, setOtpCode] = useState('');
+  const [otpSent, setOtpSent] = useState(false);
 
   // Redirect if already authenticated
   if (user && !loading) {
@@ -90,6 +91,38 @@ const Auth: React.FC = () => {
     }
   };
 
+  const handleRequestOtp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    try {
+      const result = await signInWithOtp(otpEmail);
+      if (!result.error) {
+        setOtpSent(true);
+      }
+    } catch (error) {
+      console.error('OTP request error:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleVerifyOtp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    try {
+      const result = await verifyOtp(otpEmail, otpCode);
+      if (!result.error) {
+        // Navigation will happen automatically via AuthContext
+      }
+    } catch (error) {
+      console.error('OTP verification error:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-muted/30 px-4">
       <Card className="w-full max-w-md">
@@ -105,9 +138,10 @@ const Auth: React.FC = () => {
         
         <CardContent>
           <Tabs defaultValue="signin" className="space-y-4">
-            <TabsList className="grid w-full grid-cols-2">
+            <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="signin">Sign In</TabsTrigger>
               <TabsTrigger value="signup">Sign Up</TabsTrigger>
+              <TabsTrigger value="otp">Email OTP</TabsTrigger>
             </TabsList>
             
             <TabsContent value="signin" className="space-y-4">
@@ -208,6 +242,87 @@ const Auth: React.FC = () => {
                   )}
                 </Button>
               </form>
+            </TabsContent>
+            
+            <TabsContent value="otp" className="space-y-4">
+              {!otpSent ? (
+                <form onSubmit={handleRequestOtp} className="space-y-4">
+                  <div className="flex justify-center mb-4">
+                    <Mail className="h-12 w-12 text-primary" />
+                  </div>
+                  <div className="text-center mb-4">
+                    <p className="text-sm text-muted-foreground">
+                      Enter your email to receive a verification code
+                    </p>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="otp-email">Email</Label>
+                    <Input
+                      id="otp-email"
+                      type="email"
+                      placeholder="your@email.com"
+                      value={otpEmail}
+                      onChange={(e) => setOtpEmail(e.target.value)}
+                      required
+                    />
+                  </div>
+                  
+                  <Button type="submit" className="w-full" disabled={isLoading}>
+                    {isLoading ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Sending Code...
+                      </>
+                    ) : (
+                      'Send Verification Code'
+                    )}
+                  </Button>
+                </form>
+              ) : (
+                <form onSubmit={handleVerifyOtp} className="space-y-4">
+                  <div className="text-center mb-4">
+                    <p className="text-sm text-muted-foreground">
+                      Enter the 6-digit code sent to {otpEmail}
+                    </p>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="otp-code">Verification Code</Label>
+                    <Input
+                      id="otp-code"
+                      type="text"
+                      placeholder="000000"
+                      value={otpCode}
+                      onChange={(e) => setOtpCode(e.target.value)}
+                      required
+                      maxLength={6}
+                      className="text-center text-2xl tracking-widest"
+                    />
+                  </div>
+                  
+                  <Button type="submit" className="w-full" disabled={isLoading}>
+                    {isLoading ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Verifying...
+                      </>
+                    ) : (
+                      'Verify & Sign In'
+                    )}
+                  </Button>
+                  
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    className="w-full"
+                    onClick={() => {
+                      setOtpSent(false);
+                      setOtpCode('');
+                    }}
+                  >
+                    Use Different Email
+                  </Button>
+                </form>
+              )}
             </TabsContent>
           </Tabs>
         </CardContent>

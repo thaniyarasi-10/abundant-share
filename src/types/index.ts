@@ -122,4 +122,6 @@ export interface AuthContextType {
   signUp: (email: string, password: string, userData: Partial<Profile>) => Promise<any>;
   signOut: () => Promise<void>;
   updateProfile: (updates: Partial<Profile>) => Promise<void>;
+  signInWithOtp: (email: string) => Promise<any>;
+  verifyOtp: (email: string, token: string) => Promise<any>;
 }
