@@ -1,7 +1,1 @@
-project_id = "iithfyagzmedzbfdpiig"
-
-[functions.secure-signup]
-verify_jwt = false
-
-[functions.get-signed-url]
-verify_jwt = true
+project_id = "gmcfskljpddrlrozgern"
