@@ -293,7 +293,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      booking_status: "pending" | "collected" | "cancelled"
+      booking_status: "pending" | "collected" | "cancelled" | "received"
       food_category:
         | "veg"
         | "non_veg"
@@ -302,7 +302,17 @@ export type Database = {
         | "packaged"
         | "cooked"
         | "other"
-      listing_status: "available" | "booked" | "expired" | "completed"
+        | "vegetables"
+        | "fruits"
+        | "grains"
+        | "meat"
+        | "prepared_food"
+      listing_status:
+        | "available"
+        | "booked"
+        | "expired"
+        | "completed"
+        | "claimed"
       notification_type:
         | "new_listing"
         | "listing_claimed"
@@ -438,7 +448,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      booking_status: ["pending", "collected", "cancelled"],
+      booking_status: ["pending", "collected", "cancelled", "received"],
       food_category: [
         "veg",
         "non_veg",
@@ -447,8 +457,19 @@ export const Constants = {
         "packaged",
         "cooked",
         "other",
+        "vegetables",
+        "fruits",
+        "grains",
+        "meat",
+        "prepared_food",
       ],
-      listing_status: ["available", "booked", "expired", "completed"],
+      listing_status: [
+        "available",
+        "booked",
+        "expired",
+        "completed",
+        "claimed",
+      ],
       notification_type: [
         "new_listing",
         "listing_claimed",
