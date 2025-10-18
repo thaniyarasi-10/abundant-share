@@ -166,6 +166,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signUp = async (email: string, password: string, userData: Partial<Profile>) => {
     try {
+      console.log('Starting signup process...');
       const redirectUrl = `${window.location.origin}/`;
       
       const { data, error } = await supabase.auth.signUp({
@@ -178,6 +179,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       });
 
       if (error) {
+        console.error('Signup error from Supabase:', error);
         toast({
           title: "Sign Up Failed",
           description: error.message,
@@ -186,6 +188,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return { error };
       }
 
+      console.log('Signup successful:', data);
       toast({
         title: "Welcome to FoodShare!",
         description: "Your account has been created successfully. You can now sign in.",
