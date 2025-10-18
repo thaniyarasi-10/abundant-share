@@ -166,19 +166,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signUp = async (email: string, password: string, userData: Partial<Profile>) => {
     try {
-      // Get client IP for rate limiting
-      const ip_address = await fetch('https://api.ipify.org?format=json')
-        .then(r => r.json())
-        .then(data => data.ip)
-        .catch(() => 'unknown');
-
-      // Use secure signup edge function with rate limiting
-      const { data, error } = await supabase.functions.invoke('secure-signup', {
-        body: {
-          email,
-          password,
-          userData,
-          ip_address
+      const redirectUrl = `${window.location.origin}/`;
+      
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: redirectUrl,
+          data: userData
         }
       });
 
@@ -191,23 +186,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return { error };
       }
 
-      if (data?.error) {
-        toast({
-          title: "Sign Up Failed",
-          description: data.error,
-          variant: "destructive",
-        });
-        return { error: data };
-      }
-
-      // Sign in immediately after successful signup
-      const signInResult = await signIn(email, password);
-      if (!signInResult.error) {
-        toast({
-          title: "Welcome to FoodShare!",
-          description: "Your account has been created successfully.",
-        });
-      }
+      toast({
+        title: "Welcome to FoodShare!",
+        description: "Your account has been created successfully. You can now sign in.",
+      });
 
       return { data };
     } catch (error) {

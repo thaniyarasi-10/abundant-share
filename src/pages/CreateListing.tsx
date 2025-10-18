@@ -76,19 +76,20 @@ const CreateListing: React.FC = () => {
       const pickupStart = new Date(data.pickup_time_start).toISOString();
       const pickupEnd = new Date(data.pickup_time_end).toISOString();
 
-      const { error } = await supabase.from('food_listings').insert({
+      const { error } = await supabase.from('food_listings').insert([{
         donor_id: user.id,
         title: data.title,
+        name: data.title,
         description: data.description,
         quantity: data.quantity,
-        category: data.category as Database['public']['Enums']['food_category'],
+        category: data.category as any,
         expiry_date: expiryDateTime,
         pickup_time_start: pickupStart,
         pickup_time_end: pickupEnd,
         pickup_location: data.pickup_location,
-        status: 'available',
-        images: [], // Will add file upload later
-      });
+        status: 'available' as any,
+        images: [],
+      }]);
 
       if (error) {
         toast({
