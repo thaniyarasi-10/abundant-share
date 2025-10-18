@@ -9,6 +9,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Profile as ProfileType } from '@/types';
 import { User, Save, Upload } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
+import { formatDate } from '@/lib/dateUtils';
 
 const Profile: React.FC = () => {
   const { profile, updateProfile } = useAuth();
@@ -206,7 +207,7 @@ const Profile: React.FC = () => {
                 <div>
                   <Label className="text-sm font-medium text-muted-foreground">Member Since</Label>
                   <p className="text-sm font-medium">
-                    {new Date(profile.created_at).toLocaleDateString()}
+                    {formatDate(profile.created_at)}
                   </p>
                 </div>
               </div>

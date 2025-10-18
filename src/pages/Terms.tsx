@@ -1,4 +1,5 @@
 import React from 'react';
+import { formatDate } from '@/lib/dateUtils';
 
 const Terms: React.FC = () => {
   return (
@@ -7,7 +8,7 @@ const Terms: React.FC = () => {
       
       <div className="prose prose-gray dark:prose-invert max-w-none">
         <p className="text-lg text-muted-foreground mb-6">
-          Last updated: {new Date().toLocaleDateString()}
+          Last updated: {formatDate(new Date())}
         </p>
         
         <section className="mb-8">
