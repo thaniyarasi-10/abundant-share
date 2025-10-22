@@ -51,7 +51,8 @@ export interface FoodListing {
   expiry_date: string;
   pickup_time_start: string;
   pickup_time_end: string;
-  pickup_location: string;
+  public_location?: string; // General area shown to all users
+  pickup_location: string; // Exact address shown only to claimants
   pickup_slots: any[]; // JSON array of pickup slots
   status: ListingStatus;
   claimed_by?: string;

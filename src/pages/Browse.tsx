@@ -55,7 +55,7 @@ const Browse: React.FC = () => {
         .from('food_listings')
         .select(`
           *,
-          profiles:donor_id (full_name, organization_name, phone)
+          profiles:donor_id (full_name, organization_name)
         `)
         .eq('status', 'available')
         .gte('expiry_date', new Date().toISOString())
@@ -83,7 +83,7 @@ const Browse: React.FC = () => {
       filtered = filtered.filter(listing =>
         listing.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         listing.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        listing.pickup_location.toLowerCase().includes(searchTerm.toLowerCase())
+        (listing.public_location && listing.public_location.toLowerCase().includes(searchTerm.toLowerCase()))
       );
     }
 
@@ -93,7 +93,7 @@ const Browse: React.FC = () => {
 
     if (locationFilter) {
       filtered = filtered.filter(listing =>
-        listing.pickup_location.toLowerCase().includes(locationFilter.toLowerCase())
+        listing.public_location && listing.public_location.toLowerCase().includes(locationFilter.toLowerCase())
       );
     }
 
@@ -303,7 +303,7 @@ const Browse: React.FC = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm mb-4">
                     <div className="flex items-center">
                       <MapPin className="h-4 w-4 mr-2 text-muted-foreground" />
-                      <span>{listing.pickup_location}</span>
+                      <span>{listing.public_location || 'Location not specified'}</span>
                     </div>
                     <div className="flex items-center">
                       <Clock className="h-4 w-4 mr-2 text-muted-foreground" />

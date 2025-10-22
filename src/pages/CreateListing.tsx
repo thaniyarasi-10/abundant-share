@@ -24,7 +24,8 @@ const formSchema = z.object({
   expiry_date: z.string().min(1, 'Expiry date is required'),
   pickup_time_start: z.string().min(1, 'Pickup start time is required'),
   pickup_time_end: z.string().min(1, 'Pickup end time is required'),
-  pickup_location: z.string().min(1, 'Pickup location is required'),
+  public_location: z.string().min(1, 'General area is required'),
+  pickup_location: z.string().min(1, 'Exact pickup address is required'),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -55,6 +56,7 @@ const CreateListing: React.FC = () => {
       expiry_date: '',
       pickup_time_start: '',
       pickup_time_end: '',
+      public_location: '',
       pickup_location: '',
     },
   });
@@ -86,6 +88,7 @@ const CreateListing: React.FC = () => {
         expiry_date: expiryDateTime,
         pickup_time_start: pickupStart,
         pickup_time_end: pickupEnd,
+        public_location: data.public_location,
         pickup_location: data.pickup_location,
         status: 'available' as any,
         images: [],
@@ -278,18 +281,38 @@ const CreateListing: React.FC = () => {
 
               <FormField
                 control={form.control}
-                name="pickup_location"
+                name="public_location"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Pickup Location</FormLabel>
+                    <FormLabel>General Area (Visible to Everyone)</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="Full address or landmark"
+                        placeholder="e.g., South Delhi, Andheri West"
                         {...field}
                       />
                     </FormControl>
                     <FormDescription>
-                      Where can recipients collect the food?
+                      Only a general area will be shown publicly. Your exact address stays private until someone claims.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="pickup_location"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Exact Pickup Address (Private)</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Full address with building/flat number"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      Your exact address will only be shared with people who claim your food.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>

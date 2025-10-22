@@ -89,6 +89,7 @@ export type Database = {
           pickup_slots: Json | null
           pickup_time_end: string
           pickup_time_start: string
+          public_location: string | null
           quantity: string
           status: Database["public"]["Enums"]["listing_status"]
           title: string
@@ -112,6 +113,7 @@ export type Database = {
           pickup_slots?: Json | null
           pickup_time_end: string
           pickup_time_start: string
+          public_location?: string | null
           quantity: string
           status?: Database["public"]["Enums"]["listing_status"]
           title: string
@@ -135,6 +137,7 @@ export type Database = {
           pickup_slots?: Json | null
           pickup_time_end?: string
           pickup_time_start?: string
+          public_location?: string | null
           quantity?: string
           status?: Database["public"]["Enums"]["listing_status"]
           title?: string
@@ -311,6 +314,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_pickup_location: {
+        Args: { listing_id: string; requesting_user_id: string }
+        Returns: string
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
