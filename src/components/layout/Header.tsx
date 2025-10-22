@@ -10,11 +10,13 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useAuth } from '@/contexts/AuthContext';
+import { useUserRole } from '@/hooks/useUserRole';
 import { User, Settings, LogOut, Bell } from 'lucide-react';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
 
 const Header: React.FC = () => {
   const { user, profile, signOut } = useAuth();
+  const { isAdmin } = useUserRole(user?.id);
   const navigate = useNavigate();
 
   const handleSignOut = async () => {
@@ -79,7 +81,7 @@ const Header: React.FC = () => {
                     <Settings className="mr-2 h-4 w-4" />
                     <span>Dashboard</span>
                   </DropdownMenuItem>
-                  {profile?.role === 'admin' && (
+                  {isAdmin && (
                     <DropdownMenuItem onClick={() => navigate('/admin')}>
                       <Settings className="mr-2 h-4 w-4" />
                       <span>Admin Panel</span>

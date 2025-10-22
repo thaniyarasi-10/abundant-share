@@ -27,26 +27,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setSession(session);
         setUser(session?.user ?? null);
         
-        if (session?.user) {
-          // Fetch user profile
-          setTimeout(async () => {
-            const { data: profileData } = await supabase
-              .from('profiles')
-              .select('*')
-              .eq('user_id', session.user.id)
-              .single();
-            
-            if (profileData) {
-              setProfile(profileData as Profile);
-              // Redirect admins to admin dashboard
-              if (profileData.role === 'admin') {
-                window.location.href = '/admin';
-              }
-            }
-          }, 0);
-        } else {
-          setProfile(null);
-        }
+      if (session?.user) {
+        // Fetch user profile
+        setTimeout(async () => {
+          const { data: profileData } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('user_id', session.user.id)
+            .single();
+          
+          if (profileData) {
+            setProfile(profileData as Profile);
+          }
+        }, 0);
+      } else {
+        setProfile(null);
+      }
         
         setLoading(false);
       }
